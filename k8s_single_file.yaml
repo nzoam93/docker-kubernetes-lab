@@ -1,0 +1,142 @@
+#db-deployment
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: db-deployment 
+  labels: 
+    app: example-quiz-app
+    tier: db
+spec: 
+  replicas: 1
+  template: 
+    metadata:
+      name: db-pod
+      labels:
+        app: example-quiz-app 
+        tier: db 
+    spec: 
+      containers:
+      - name: db-container 
+        image: nzoam93/example-app-db
+        env: 
+        - name: POSTGRES_USER
+          value: "myuser"
+        - name: POSTGRES_PASSWORD
+          value: "mypassword"
+        - name: POSTGRES_DB
+          value: "mydb"
+        ports: 
+        - containerPort: 5432 
+  selector: 
+    matchLabels:
+      app: example-quiz-app
+
+
+---
+#db-service
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: db 
+  labels:
+    name: db-service 
+    app: example-quiz-app
+spec: 
+  type: ClusterIP 
+  ports: 
+  - port: 5432 
+    targetPort: 5432 
+  selector: 
+    app: example-quiz-app 
+    tier: db 
+
+
+---
+#backend-deployment
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: backend-deployment 
+  labels: 
+    app: example-quiz-app
+    tier: backend
+spec: 
+  replicas: 1 
+  template: 
+    metadata:
+      name: backend-pod
+      labels:
+        app: example-quiz-app 
+        tier: backend 
+    spec: 
+      containers:
+      - name: backend-container 
+        image: nzoam93/example-app-backend 
+        ports:
+        - containerPort: 5000 
+  selector: 
+    matchLabels:
+      app: example-quiz-app
+
+---
+#backend-service 
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: backend 
+  labels:
+    name: backend-service 
+    app: example-quiz-app
+spec: 
+  type: ClusterIP 
+  ports: 
+  - port: 5000
+    targetPort: 5000
+  selector:
+    app: example-quiz-app 
+    tier: backend 
+
+--- 
+#frontend-deployment
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: frontend-deployment 
+  labels: 
+    app: example-quiz-app
+    tier: frontend
+spec: 
+  replicas: 1
+  template: 
+    metadata:
+      name: frontend-pod
+      labels:
+        app: example-quiz-app 
+        tier: frontend 
+    spec: 
+      containers:
+        - name: frontend-container 
+          image: nzoam93/example-app-frontend
+          ports:
+          - containerPort: 80
+  selector: 
+    matchLabels:
+      app: example-quiz-app
+
+---
+#frontend-service 
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: frontend
+  labels:
+    name: frontend-service 
+    app: example-quiz-app
+spec: 
+  type: LoadBalancer
+  ports: 
+  - port: 80 
+    targetPort: 80
+  selector: 
+    app: example-quiz-app 
+    tier: frontend 

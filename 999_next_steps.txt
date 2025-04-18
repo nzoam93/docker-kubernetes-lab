@@ -1,0 +1,15 @@
+## Things to still do:
+
+
+6. Go through and give more detail to the various parts, especially about K8s
+7. Maybe have a references page where they can go to in order to learn more
+
+
+11. Is the nginx part sufficient?
+
+13. Talk about how docker-compose allows us to run the docker images without needing to make them ourselves (i.e. someone else could have made them and we can just use them)
+You can also talk about doing it in detached mode
+14. Ensure it still works with new port 80 (instead of 8081 in backend)
+
+15. More info
+We tell the master node what to do (through kubectl) and it tells the worker nodes what to do 
