@@ -1,12 +1,12 @@
 ## Step 13: Creating a Helm Chart
 
-In our previous K8s example, we created three distinct deployment files and three distinct service files for a relatively simple quiz application. This process can be simplified through the use of Helm, which is commonly referred to as the Kubernetes Service Manager. Helm can be used to deploy K8s applications more seamlesslly, and with a single command rather than having several *kubectl create* commands. 
+In our previous K8s example, we created three distinct deployment files and three distinct service files for a relatively simple quiz application. This process can be simplified through the use of Helm, which is commonly referred to as the Kubernetes Service Manager. Helm can be used to deploy K8s applications more seamlesslly, and with a single command rather than having several *kubectl create* commands.
 
-Helm is already configured on ETILabs so we can get to an example right away. 
+Helm is already configured on ETILabs so we can get to an example right away.
 
 ### Part 1: Creating Folder Structure and Files
 
-The below image is an example of the file structure for a helm chart and is from the official Helm website. Note that many of these files are optional so we will begin our example without those particular files. 
+The below image is an example of the file structure for a helm chart and is from the official Helm website. Note that many of these files are optional so we will begin our example without those particular files.
 
 ![Helm File Structure](./images/helm_structure.png)
 
@@ -17,7 +17,7 @@ cd ~
 mkdir myQuizApp
 cd myQuizApp
 touch Chart.yaml
-touch values.yaml 
+touch values.yaml
 mkdir charts
 mkdir crds
 mkdir templates
@@ -66,14 +66,14 @@ EOF
 
 ### Part 3: Testing out helm
 
-Even this early on, we can see one benefit of using helm. We can now use a single command to begin our app, rather than the six "create -f" commands from earlier. 
+Even this early on, we can see one benefit of using helm. We can now use a single command to begin our app, rather than the six "create -f" commands from earlier.
 
 However, before we begin, let's remove the previous deployments, pods, and services so that we can ensure that we are starting fresh with this new single-file deployment.
 
 ```bash
 cd ~
-kubectl delete deployments --all 
-kubectl delete svc frontend backend db 
+kubectl delete deployments --all
+kubectl delete svc frontend backend db
 ```
 
 After running the previous command, we can ensure that our app is no longer running by going to the quiz application page and refreshing. We should get an error saying *This page isn't working*.
@@ -89,7 +89,7 @@ You should now be able to refresh the quiz page from earlier and see the quiz wo
 
 ### Part 4: Utilizing the *images.yaml* File
 
-A key benefit of Helm is that you can define variables inside of the *images.yaml* file. Variables are defined in a key-value pair like *appName: myQuizApp*. Then, you can simply refer to them by the variable name inside your file and you can easily change all variable names at once by changing the single key-value pair in the images.yaml file. 
+A key benefit of Helm is that you can define variables inside of the *images.yaml* file. Variables are defined in a key-value pair like *appName: myQuizApp*. Then, you can simply refer to them by the variable name inside your file and you can easily change all variable names at once by changing the single key-value pair in the images.yaml file.
 
 Let's get some practice with this. Inside of our *images.yaml* file, let's create the aforementioned key-value pair for appName.
 
@@ -100,7 +100,7 @@ appName: myQuizApp
 EOF
 ```
 
-Noe that we have that, let's utilize it in our document. We can do so by placing it in curly-braces like this {{ .Values.appName }}. Let's go ahead and replace each instance of *appName* with {{ .Values.appName }}. If you would like, you can do so manually. Alternatively, just press the following commands, which will replace each of our previous files in the *myQuizApp/templates* directory of our Helm chart with files that contain our variable names.  
+Now that we have that, let's utilize it in our document. We can do so by placing it in curly-braces like this {{ .Values.appName }}. Let's go ahead and replace each instance of *appName* with {{ .Values.appName }}. If you would like, you can do so manually. Alternatively, just press the following commands, which will replace each of our previous files in the *myQuizApp/templates* directory of our Helm chart with files that contain our variable names.
 
 Updating the db-deployment.yaml file:
 
@@ -287,15 +287,15 @@ EOF
 
 ### Part 5: Using the updated files
 
-As always when we are trying to see the results of our new process, let's delete the previous deployments and services. 
+As always when we are trying to see the results of our new process, let's delete the previous deployments and services.
 
 ```bash
 cd ~
-kubectl delete deployments --all 
-kubectl delete svc frontend backend db 
+kubectl delete deployments --all
+kubectl delete svc frontend backend db
 ```
 
-Now that we have updated the files in part 4, we can run a simple command to tell Helm to use these files. This is very similar to the previous helm install command. The two differences are that we are no longer initiating the helm from scratch so we use *upgrade* instead of *install*. Also, now that we have an value file, we have to tell helm to use it by including the *--values* along with the path to the values file from the current directory. 
+Now that we have updated the files in part 4, we can run a simple command to tell Helm to use these files. This is very similar to the previous helm install command. The two differences are that we are no longer initiating the helm from scratch so we use *upgrade* instead of *install*. Also, now that we have an value file, we have to tell helm to use it by including the *--values* along with the path to the values file from the current directory.
 
 ```bash
 cd ~
@@ -304,5 +304,4 @@ helm upgrade myquizapp-release myQuizApp --values ./myQuizApp/values.yaml
 
 Congrats, you have now utilized the *values.yaml* to successfully deploy your application using Helm.
 
-You can change as many variables as you would like following the same process outlined in the previous two steps. Then, simply run the upgrade command again and see the results of your work. 
-
+You can change as many variables as you would like following the same process outlined in the previous two steps. Then, simply run the upgrade command again and see the results of your work.
